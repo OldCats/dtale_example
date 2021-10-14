@@ -1,0 +1,5 @@
+name: dtale
+channels:
+  - defaults
+dependencies:
+  - pandas
