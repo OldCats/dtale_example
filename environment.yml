@@ -5,4 +5,9 @@ channels:
 dependencies:
   - pandas
   - numpy
+  - dash
   - dtale
+  - nbserverproxy
+  - pip
+  - pip:
+    - jupyter-server-proxy
