@@ -11,3 +11,5 @@ dependencies:
   - pip
   - pip:
     - jupyter-server-proxy
+    - mitoinstaller
+    - mitosheet3
