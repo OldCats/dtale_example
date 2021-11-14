@@ -13,3 +13,4 @@ dependencies:
     - jupyter-server-proxy
     - mitoinstaller
     - mitosheet3
+    - pandas-visual-analysis
