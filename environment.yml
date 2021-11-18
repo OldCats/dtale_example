@@ -14,3 +14,4 @@ dependencies:
     - mitoinstaller
     - mitosheet3
     - pandas-visual-analysis
+    - pydataverse

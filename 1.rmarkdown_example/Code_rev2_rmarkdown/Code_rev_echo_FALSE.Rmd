@@ -1,0 +1,149 @@
+---
+title: "Code_rev"
+output: html_document
+---
+
+```{r echo=FALSE}
+#install.packages("remotes")
+#remotes::install_github("rstudio/reticulate")
+```
+
+```{bash echo=FALSE, include=FALSE}
+rm -rf /home/rstudio-user/.local/share/r-miniconda/envs/r-reticulate/lib/python3.6/site-packages/certifi*
+pip install certifi
+pip install scipy tqdm matplotlib networkx seaborn mlab vk
+pip install chart_studio pydataverse statsmodels
+```
+
+
+```{python echo=FALSE, include=FALSE}
+import pandas as pd
+import scipy.sparse as sprs
+import vk
+import time
+from tqdm.auto import tqdm
+import os
+import gc
+import numpy as np
+from scipy.sparse import csr_matrix, lil_matrix
+import matplotlib.pyplot as plt
+import networkx as nx
+import seaborn as sns
+import scipy
+import random
+from scipy import stats
+import chart_studio.plotly as py
+import plotly.graph_objs as go
+from scipy.stats import binom
+import math
+from matplotlib import mlab
+import pylab
+from statsmodels.stats.proportion import proportion_confint
+```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{python, echo=FALSE}
+def op_distr(x, xlabel_name, limits, yscale, density_value):
+ plt.figure(figsize=(5, 5))
+ n, bins, patches = plt.hist(x, 50, density=density_value, facecolor='grey')
+ if yscale == 'log':
+  plt.yscale('log')
+ else:
+  plt.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
+ plt.xlabel(xlabel_name, fontsize = 15)
+ plt.xlim(limits[0], limits[1])
+ plt.grid(True)
+ plt.savefig('image.pdf')
+ plt.show()
+ #plt.savefig('image.pdf')
+ return 0
+
+def assortativity(t):
+ labels = np.array(data['$p_{i}(t_{' + str(t) + '})$'])
+ labels_new = np.around(labels*10, decimals=1)
+ labels_new = labels_new.astype(int)
+
+ opinion_dict = {i: labels_new[i] for i in range(len(labels_new))}
+ nx.set_node_attributes(Graph, opinion_dict, 'opinion')
+ #print(nx.numeric_assortativity_coefficient(Graph, 'opinion'))
+ return 0
+```
+```{python, echo=FALSE}
+#SUPPRESS SCIENTIFIC NOTATION
+pd.set_option('display.float_format', lambda x: '%.2f' % x)
+```
+
+Download data
+```{python download data, echo=FALSE}
+
+from pyDataverse.api import NativeApi, DataAccessApi
+from pyDataverse.models import Dataverse
+
+base_url = 'https://dataverse.harvard.edu/'
+api = NativeApi(base_url)
+data_api = DataAccessApi(base_url)
+
+DOI = "doi:10.7910/DVN/CLI1PC"
+
+dataset = api.get_dataset(DOI)
+
+files_list = dataset.json()['data']['latestVersion']['files']
+
+for file in files_list:
+    filename = file["dataFile"]["filename"]
+    file_id = file["dataFile"]["id"]
+    print("File name {}, id {}".format(filename, file_id))
+
+    response = data_api.get_datafile(file_id)
+    with open(filename, "wb") as f:
+        f.write(response.content)
+
+```
+```{python shape, echo=FALSE}
+import pandas as pd
+data = pd.read_csv('X_opinions.scv')
+data.drop(['Unnamed: 0'], axis=1, inplace=True)
+#print(data.shape)
+```
+Histograms
+```{python echo=FALSE} 
+import matplotlib.pyplot as plt
+def op_distr(x, xlabel_name, limits, yscale, density_value):
+ plt.figure(figsize=(5, 5))
+ n, bins, patches = plt.hist(x, 50, density=density_value, facecolor='grey')
+ if yscale == 'log':
+  plt.yscale('log')
+ else:
+  plt.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
+ plt.xlabel(xlabel_name, fontsize = 15)
+ plt.xlim(limits[0], limits[1])
+ plt.grid(True)
+ plt.savefig('image.pdf')
+ plt.show()
+ #plt.savefig('image.pdf')
+ #return 0
+
+t_1 = 1
+t_2 = 2
+t_3 = 3
+
+x_1 = '$\hat{x}_{i}(t_{' + str(t_1) + '})$'
+x_2 = '$\hat{x}_{i}(t_{' + str(t_2) + '})$'
+x_3 = '$\hat{x}_{i}(t_{' + str(t_3) + '})$'
+
+fr_1 = '$\hat{x}_{-i}(t_{' + str(t_1) + '})$'
+fr_2 = '$\hat{x}_{-i}(t_{' + str(t_2) + '})$'
+fr_3 = '$\hat{x}_{-i}(t_{' + str(t_3) + '})$'
+x = data[x_3]
+xlabel_name = x_3
+limits = (0, 1)
+yscale = 'norm'
+density_value = False
+
+op_distr(x, xlabel_name, limits, yscale, density_value)
+```
+
+

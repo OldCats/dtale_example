@@ -1,0 +1,17 @@
+name: dtale
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - pandas
+  - numpy
+  - dash
+  - dtale
+  - nbserverproxy
+  - pip
+  - pip:
+    - jupyter-server-proxy
+    - mitoinstaller
+    - mitosheet3
+    - pandas-visual-analysis
+    - pydataverse
