@@ -15,4 +15,4 @@ dependencies:
     - mitosheet3
     - pandas-visual-analysis
     - pydataverse
-    - mito
+    - voila
